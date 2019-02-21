@@ -13,6 +13,7 @@
 #include "infoware/cpu.hpp"
 #include <iostream>
 #include <utility>
+#include <windows.h>
 
 
 static const char* cache_type_name(iware::cpu::cache_type_t cache_type) noexcept;
@@ -47,6 +48,7 @@ int main(int, char*[]) {
 		std::cout << "\n"
 		          << "  Architecture: " << architecture_name(iware::cpu::architecture()) << '\n'
 		          << "  Frequency: " << iware::cpu::frequency() << " Hz\n"
+		          << "  MaxFrequency: " << iware::cpu::max_frequency() << " Hz\n"
 		          << "  Endianness: " << endianness_name(iware::cpu::endianness()) << '\n'
 		          << "  Model name: " << iware::cpu::model_name() << '\n'
 				  << "  Vendor ID: " << iware::cpu::vendor_id() << '\n';

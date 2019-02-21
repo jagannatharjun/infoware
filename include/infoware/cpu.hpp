@@ -119,6 +119,7 @@ namespace iware {
 
 		/// Returns the current frequency of the current CPU in Hz.
 		std::int64_t frequency() noexcept;
+		std::int64_t max_frequency() noexcept;
 
 		/// Returns the current endianness of the current CPU.
 		endianness_t endianness() noexcept;

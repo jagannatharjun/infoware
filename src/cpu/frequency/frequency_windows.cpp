@@ -24,5 +24,37 @@ std::int64_t iware::cpu::frequency() noexcept {
 	return static_cast<int64_t>(freq.QuadPart * 1000);
 }
 
+// Use Query Performance Counter to get a nice accurate time-stamp.
+__int64 GetQPCTime()
+{
+    LARGE_INTEGER qpcTime;
+    QueryPerformanceCounter(&qpcTime);
+    return qpcTime.QuadPart;
+}
+
+// Use QueryPerformanceCounter to interpret the results of GetQPCTime()
+__int64 GetQPCRate()
+{
+    LARGE_INTEGER qpcRate;
+    QueryPerformanceFrequency(&qpcRate);
+    return qpcRate.QuadPart;
+}
+
+std::int64_t iware::cpu::max_frequency() noexcept {
+	__int64 rdtscStart = __rdtsc();
+	__int64 qpcStart = GetQPCTime();
+	DWORD startTick = GetTickCount();
+  const DWORD msDuration = 1000;
+  const double qpcRate = (double)GetQPCRate();
+	for (;;)
+	{
+			DWORD tickDuration = GetTickCount() - startTick;
+			if (tickDuration >= msDuration)
+					break;
+	}
+	__int64 rdtscElapsed = __rdtsc() - rdtscStart;
+	__int64 qpcElapsed = GetQPCTime() - qpcStart;
+	return rdtscElapsed / (qpcElapsed / qpcRate);
+}
 
 #endif
