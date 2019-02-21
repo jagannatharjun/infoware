@@ -14,6 +14,8 @@
 #ifndef INFOWARE_USE_OPENCL
 #ifdef INFOWARE_USE_OPENGL
 
+#include <vector>
+#include "infoware/gpu.hpp"
 
 // OpenGL is literaly hitler to initialise a windowless context for, so no game.
 // Leave it for someone smarter than me :G
