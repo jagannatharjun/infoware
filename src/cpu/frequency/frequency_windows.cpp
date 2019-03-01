@@ -45,18 +45,19 @@ static __inline__ unsigned long long rdtsc(void) {
   return x;
 }
 
-#elif defined(__x86_64__)
+#elif defined(__x86_64__) || defined(_WIN64)
 
-static __inline__ unsigned long long rdtsc(void) {
-  unsigned hi, lo;
-  __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
-  return ((unsigned long long)lo) | (((unsigned long long)hi) << 32);
-}
-
+// static __inline__ unsigned long long rdtsc(void) {
+//  unsigned hi, lo;
+//  __asm__ __volatile__("rdtsc" : "=a"(lo), "=d"(hi));
+//  return ((unsigned long long)lo) | (((unsigned long long)hi) << 32);
+//}
+#define rdtsc __rdtsc
 #endif
 
 std::int64_t iware::cpu::max_frequency() noexcept {
-  __int64 rdtscStart = rdtsc();
+  LARGE_INTEGER rdtscStart;
+  QueryPerformanceCounter(&rdtscStart);
   __int64 qpcStart = GetQPCTime();
   DWORD startTick = GetTickCount();
   const DWORD msDuration = 1000;
@@ -66,7 +67,9 @@ std::int64_t iware::cpu::max_frequency() noexcept {
     if (tickDuration >= msDuration)
       break;
   }
-  __int64 rdtscElapsed = rdtsc() - rdtscStart;
+  LARGE_INTEGER rdtscEnd;
+  QueryPerformanceCounter(&rdtscEnd);
+  __int64 rdtscElapsed = rdtscEnd.QuadPart - rdtscStart.QuadPart;
   __int64 qpcElapsed = GetQPCTime() - qpcStart;
   return rdtscElapsed / (qpcElapsed / qpcRate);
 }
